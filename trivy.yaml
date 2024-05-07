@@ -3,21 +3,24 @@ format: json
 dependency-tree: true
 list-all-pkgs: true
 severity:
+  - UNKNOWN
+  - LOW
+  - MEDIUM
   - HIGH
   - CRITICAL
 scan:
   skip-dirs:
+    # You can reduce this list or remove it completely for a more thorough scan
     - /lib64
-    - /lib
-    - /usr/lib
-    - /usr/include
-
   scanners:
     - vuln
+    - config
+    - license
     - secret
 vulnerability:
   type:
     - os
     - library
-  ignore-unfixed: true
+    - binary
+  ignore-unfixed: false  # Set to true if you want to ignore unfixed vulnerabilities
 output: trivy.txt
