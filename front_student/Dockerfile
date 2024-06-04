@@ -1,25 +1,18 @@
-# FROM mhart/alpine-node:11 AS builder
-# WORKDIR /app
-# COPY . .
-# RUN yarn install
-# RUN yarn build
-# WORKDIR /app
-# COPY --from=builder /app/build .
-# CMD ["serve", "-p", "80", "-s", "."]
-
-# Étape de construction
-FROM mhart/alpine-node:14 AS builder
+# Build stage
+FROM node:14-alpine AS builder
 WORKDIR /app
 COPY . .
+RUN apk update && apk add --no-cache g++ make python3
 RUN yarn install
 RUN yarn build
 
-# Étape de déploiement
-FROM mhart/alpine-node:14
+# Deployment stage
+FROM node:14-alpine
 WORKDIR /app
-# Copie les fichiers construits depuis l'étape de construction
 COPY --from=builder /app/build /app
-# Installe un serveur HTTP simple pour servir les contenus statiques
+RUN apk update && apk add --no-cache yarn
 RUN yarn global add serve
-# Définit la commande pour servir l'application
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app
+USER appuser
 CMD ["serve", "-p", "80", "-s", "/app"]
