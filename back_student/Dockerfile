@@ -1,22 +1,32 @@
-FROM node:11-alpine 
-
-RUN mkdir -p /usr/src/app
+# Build stage
+FROM node:14-alpine AS builder
 
 WORKDIR /usr/src/app
 
+# Copy the application code
 COPY . .
 
-COPY entrypoint.sh /entrypoint.sh
-
-RUN chmod +x /entrypoint.sh
-
-RUN apk add g++ make python
-
+# Install dependencies
+RUN apk update && apk add --no-cache g++ make python3
 RUN yarn install
 
+# Runtime stage
+FROM node:14-alpine
+
+# Create a non-root user
+WORKDIR /usr/src/app
+
+# Copy the application code from the build stage
+COPY --from=builder /usr/src/app .
+
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+RUN chown -R appuser:appgroup /usr/src/app
+USER appuser
 
 EXPOSE 3000
-
 CMD ["/entrypoint.sh"]
-# CMD ["yarn", "migration:start"]
-# CMD ["yarn", "start"]
