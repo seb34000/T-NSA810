@@ -26,6 +26,7 @@ spec:
             - name: DB_HOST
               value: db
           image: back:1.0
+          imagePullPolicy: IfNotPresent
           name: dev-api
           ports:
             - containerPort: 3000

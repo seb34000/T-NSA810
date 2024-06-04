@@ -11,15 +11,18 @@ run_silently minikube delete --force
 echo "🚀 Starting Minikube cluster..."
 run_silently minikube start --force
 
-eval $(minikube docker-env)
-
 echo "🐳 Building back image..."
 run_silently docker build -t back:1.0 ./back_student
 
 echo "🐳 Building front image..."
 run_silently docker build -t front:1.0 ./front_student
 
-eval $(minikube docker-env -u)
+echo "🐳 pushing docker images to minikube ..."
+run_silently docker save -o back_1.0.tar back:1.0
+run_silently docker save -o front_1.0.tar front:1.0
+run_silently minikube image load back_1.0.tar
+run_silently minikube image load front_1.0.tar
+
 
 echo "🔧 Creating namespace argocd..."
 run_silently kubectl create namespace argocd
