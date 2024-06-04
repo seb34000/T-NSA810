@@ -33,7 +33,8 @@ run_silently kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=ar
 echo "🎉 Argocd is ready and installed! 🎉"
 
 echo "🔒 Forwarding port to access Argo CD..."
- kubectl port-forward service/argocd-server -n argocd 8080:443
+run_silently kubectl port-forward service/argocd-server -n argocd 8080:443 &
+sleep 5
 
 echo "🔑 Logging in to Argo CD as admin..."
  argocd login localhost:8080 --username admin --password $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) --insecure
@@ -42,12 +43,12 @@ echo "🔐 Updating admin password..."
  argocd account update-password --account admin --current-password $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) --new-password adminadmin
 
 echo "📚 Adding Git repository to Argo CD..."
-argocd repo add https://github.com/seb34000/T-NSA810 --username $GIT_USER --password $GIT_TOKEN --insecure
+argocd repo add https://github.com/seb34000/T-NSA810 --username $GIT_USER --password $GIT_TOKEN
 
 echo "🔄 Adding source to Argo CD application..."
 run_silently argocd app create nsa \
     --repo https://github.com/seb34000/T-NSA810 \
-    --path mannifests/ \
+    --path mannifests \
     --dest-server https://kubernetes.default.svc \
     --dest-namespace nsa \
     --revision HEAD \

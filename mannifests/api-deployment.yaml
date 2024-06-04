@@ -25,7 +25,7 @@ spec:
         - env:
             - name: DB_HOST
               value: db
-          image: sample-express-app
+          image: back:1.0
           name: dev-api
           ports:
             - containerPort: 3000
