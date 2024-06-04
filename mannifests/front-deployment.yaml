@@ -23,6 +23,7 @@ spec:
             - name: REACT_APP_API_URL
               value: http://api:3000
           image: front:1.0
+          imagePullPolicy: IfNotPresent
           name: front
           ports:
             - containerPort: 80
