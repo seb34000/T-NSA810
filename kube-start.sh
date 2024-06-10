@@ -48,13 +48,13 @@ ARGOCD_URL="http://${MINIKUBE_IP}:${NODE_PORT}"
 echo "🔗 Argo CD URL: $ARGOCD_URL"
 
 echo "🔑 Logging in to Argo CD as admin..."
-argocd login ${MINIKUBE_IP}:${NODE_PORT} --username admin --password "$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)" --insecure
+run_silently argocd login ${MINIKUBE_IP}:${NODE_PORT} --username admin --password "$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)" --insecure
 
 echo "🔐 Updating admin password..."
-argocd account update-password --account admin --current-password "$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)" --new-password adminadmin
+run_silently argocd account update-password --account admin --current-password "$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)" --new-password adminadmin
 
 echo "📚 Adding Git repository to Argo CD..."
-argocd repo add https://github.com/seb34000/T-NSA810 --username $GIT_USER --password $GIT_TOKEN
+run_silently argocd repo add https://github.com/seb34000/T-NSA810 --username $GIT_USER --password $GIT_TOKEN
 
 echo "🔄 Adding source to Argo CD application..."
 run_silently argocd app create nsa \
@@ -68,4 +68,9 @@ run_silently argocd app create nsa \
     --sync-option CreateNamespace=true
 
 echo "🔄 Syncing Argo CD application..."
-argocd app sync nsa
+run_silently argocd app sync nsa
+
+echo "🔒 Connect to Argo CD using the following credentials:"
+echo "👤 Username: admin"
+echo "🔑 Password: adminadmin"
+echo "🌐 URL: $ARGOCD_URL"
