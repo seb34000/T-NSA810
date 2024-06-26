@@ -31,7 +31,6 @@ Ensure you have the following installed on your machine:
 You will need to set the following environment variables:
 
 - `GIT_USER`: Your GitHub username.
-- `GIT_TOKEN`: Your GitHub personal access token with appropriate permissions to access the repository.
 
 ## Setup and Deployment Steps
 
@@ -46,7 +45,6 @@ You will need to set the following environment variables:
 
     ```bash
     export GIT_USER=your_github_username
-    export GIT_TOKEN=your_github_token
     ```
 
 3. **Run the Deployment Script**
@@ -57,6 +55,8 @@ You will need to set the following environment variables:
     chmod +x kube-start.sh
     sudo ./kube-start.sh
     ```
+
+    when asked by argocd you will need to put your github token as github password
 
 4. **Access the Argo CD UI**
 
