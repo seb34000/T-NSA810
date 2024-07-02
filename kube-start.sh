@@ -30,6 +30,7 @@ echo "🔧 Creating namespace argocd..."
 run_silently kubectl create namespace argocd
 
 echo "⚙️ Installing Argo CD..."
+run_silently helm repo add argo https://argoproj.github.io/argo-helm
 run_silently helm install argocd argo/argo-cd -n argocd
 
 echo "🔧 Exposing Argo CD server..."
