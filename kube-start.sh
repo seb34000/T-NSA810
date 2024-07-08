@@ -2,11 +2,13 @@
 
 # Function to run commands silently
 run_silently() {
-  "$@" > /dev/null 2>&1
+  "$@"
+#"$@" > /dev/null 2>&1
 }
 
 echo "🔥 Deleting existing Minikube cluster..."
 run_silently minikube delete
+run_silently rm /tmp/juju-mk*
 
 echo "🚀 Starting Minikube cluster..."
 run_silently minikube start --force

@@ -29,6 +29,10 @@ spec:
               value: dev_db
             - name: MYSQL_ROOT_PASSWORD
               value: root
+            - name: MYSQL_USER
+              value: "tnsa810"
+            - name: MYSQL_PASSWORD
+              value: "VeryGoodPassword"
           image: mysql:8.0.37
           name: dev-db
           ports:
@@ -38,8 +42,13 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: db-data
+            - name: db-config-volume ## specify volume name
+              mountPath: /docker-entrypoint-initdb.d ## path to mount file
       restartPolicy: Always
       volumes:
         - name: db-data
           persistentVolumeClaim:
             claimName: db-data
+        - name: db-config-volume
+          configMap:
+            name: db-config

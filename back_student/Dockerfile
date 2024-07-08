@@ -13,7 +13,7 @@ RUN yarn install
 # Runtime stage
 FROM node:14-alpine
 
-# Create a non-root user
+# Go to Working Directory
 WORKDIR /usr/src/app
 
 # Copy the application code from the build stage
@@ -25,8 +25,9 @@ RUN chmod +x /entrypoint.sh
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
+# Create a non root user 
 RUN chown -R appuser:appgroup /usr/src/app
 USER appuser
 
 EXPOSE 3000
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
